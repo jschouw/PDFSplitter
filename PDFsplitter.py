@@ -8,7 +8,6 @@ from datetime import datetime
 
 # todo:
 # - .gitignore file
-# - requirements.txt
 # - docstrings
 # - PEP8
 # - create safeguards and checks
