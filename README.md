@@ -1,4 +1,8 @@
+<div style="text-align: center;">
+
 ![pdf-tools logo](logo.png "pdf-tools logo")
+
+</div>
 
 An easy solution for performing basic tasks with PDF files that are often locked behind 
 a paywall in popular software.
