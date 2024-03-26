@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+    Functionality and logic of the program, including both GUI creation and PDF manipulation.
+"""
+
 # the intended audience for this project is an everyday office employee needing to manipulate
 # PDF files in simple ways without having to pay for Adobe Acrobat. complement Acrobat free
 # version, offering functionality that it does not, or that you normally would need to pay for.
 # it will require a simple GUI for the layperson, but should also allow CLI use for the tech-inclined.
 # this program is essentially an easier-to-use wrapper for pypdf
 
-# 2. brainstorm program functionality, GUI layout, CLI commands, and program structure
-# 3. start implementing features and committing to github!
 
 # [brainstorm]
 # acrobat viewer is the free version, and it can basically only open PDF files.
@@ -37,24 +39,11 @@
 import os
 import tkinter
 from datetime import datetime
-from pypdf import PdfReader
-from pypdf import PdfWriter
 from tkinter import *
 from tkinter import ttk
 
-
-def pdf_tools_gui():
-    """Starts tkinter GUI loop for running pdf-tools scripts."""
-    root = Tk()
-    root.title("pdftools")
-    frame = ttk.Frame(root, padding=5)  # Frame widget to fit in root window
-    frame.grid()
-    logo = tkinter.PhotoImage(file="logo.png")
-    ttk.Label(frame, image=logo).grid(column=0, row=0)
-    ttk.Button(frame, text="Split PDFs", command=split_pdfs).grid(column=0, row=1)
-    ttk.Button(frame, text="Merge PDFs", command=merge_pdfs).grid(column=0, row=2)
-    ttk.Button(frame, text="Exit", command=root.destroy).grid(column=0, row=3)
-    root.mainloop()
+from pypdf import PdfReader
+from pypdf import PdfWriter
 
 
 def split_pdfs():
@@ -80,7 +69,7 @@ def split_pdfs():
                 pdf_writer_back.append(fileobj=pdf_reader, pages=(int(pagecount / 2), pagecount))
 
     if count == 0:
-        return messagebox.showerror(title="Error: No files", message="Error: No PDF files to split.")
+        return tkinter.messagebox.showerror(title="Error: No files", message="Error: No PDF files to split.")
 
     current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
     front_output = open(current_time + "-front-split-output.pdf", "wb")
@@ -89,7 +78,7 @@ def split_pdfs():
     pdf_writer_back.write(back_output)
     pdf_writer_front.close()
     pdf_writer_back.close()
-    messagebox.showinfo("PDF Split Completed", f"{count} file(s) split.")
+    tkinter.messagebox.showinfo("PDF Split Completed", f"{count} file(s) split.")
 
 
 def merge_pdfs():
@@ -104,7 +93,7 @@ def merge_pdfs():
             pdf_writer.append(fileobj=pdf_reader)
 
     if count <= 1:
-        return messagebox.showerror(title="Error: Not enough files",
+        return tkinter.messagebox.showerror(title="Error: Not enough files",
                                     message="Error: Not enough PDF files to complete merge operation.")
 
     current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
@@ -112,14 +101,18 @@ def merge_pdfs():
     output = open(current_time + "-merged_output.pdf", "wb")
     pdf_writer.write(output)
     pdf_writer.close()
-    messagebox.showinfo("PDF Merge Completed", f"{count} files merged.")
+    tkinter.messagebox.showinfo("PDF Merge Completed", f"{count} files merged.")
 
 
-def main():
-    """Main function, executed if module is run as a script."""
-    pdf_tools_gui()  # Start tkinter GUI
-
-
-# If module is run as a script, execute main()
-if __name__ == '__main__':
-    main()
+def pdf_tools_gui():
+    """Starts tkinter GUI loop for running pdf-tools scripts."""
+    root = Tk()
+    root.title("pdftools")
+    frame = ttk.Frame(root, padding=5)  # Frame widget to fit in root window
+    frame.grid()
+    logo = tkinter.PhotoImage(file="logo.png")
+    ttk.Label(frame, image=logo).grid(column=0, row=0)
+    ttk.Button(frame, text="Split PDFs", command=split_pdfs).grid(column=0, row=1)
+    ttk.Button(frame, text="Merge PDFs", command=merge_pdfs).grid(column=0, row=2)
+    ttk.Button(frame, text="Exit", command=root.destroy).grid(column=0, row=3)
+    root.mainloop()
