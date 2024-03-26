@@ -1,8 +1,6 @@
-<div style="text-align: center;">
-
-![pdf-tools logo](logo.png "pdf-tools logo")
-
-</div>
+<p align="center">
+  <img width="192" height="131" src=logo.png>
+</p>
 
 
 An easy solution for performing basic tasks with PDF files that are often locked behind 
