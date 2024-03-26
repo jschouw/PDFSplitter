@@ -1,21 +1,56 @@
 #!/usr/bin/env python3
 
+# the intended audience for this project is an everyday office employee needing to manipulate
+# PDF files in simple ways without having to pay for Adobe Acrobat. complement Acrobat free
+# version, offering functionality that it does not, or that you normally would need to pay for.
+# it will require a simple GUI for the layperson, but should also allow CLI use for the tech-inclined.
+# this program is essentially an easier-to-use wrapper for pypdf
+
+# 2. brainstorm program functionality, GUI layout, CLI commands, and program structure
+# 3. start implementing features and committing to github!
+
+# [brainstorm]
+# acrobat viewer is the free version, and it can basically only open PDF files.
+# functionality brainstorming: merge, splice, split, metadata operations, extract text, extract images,
+# encrypt/password, reduce file size
+# Edit text and images, reorder, and delete pages in a PDF
+# Convert PDFs and export to Microsoft Word, Excel, and PowerPoint
+# Redact to permanently remove sensitive visible information
+# Compare two versions of a PDF to review all differences
+
+# GUI brainstorm:
+# 1 main window with a logo and a series of buttons, each button opening the respective PDF process
+# merge button will open a window that allows you to select multiple files to merge, then opens a 2nd dialog for confirmation of the order of documents
+# split button will open a window that allows you to select just 1 file, and then a 2nd dialog for confirmation of the split location
+# splice button will open a window that shows the PDF, and alongside it will be a text entry box for the page(s), with a 2nd dialog for confirmation that shows the new PDF
+# metadata operations button will open a filechooser, then ask what operation to do, then confirm
+# extracta text and extract images buttons will
+
+# CLI brainstorm:
+#
+
+# program structure brainstorm:
+#
+
+# ****************************************************************************
 
 import os
+import tkinter
 from datetime import datetime
 from pypdf import PdfReader
 from pypdf import PdfWriter
+from tkinter import *
 from tkinter import ttk
-from tkinter import Tk
-from tkinter import messagebox
 
 
 def pdf_tools_gui():
     """Starts tkinter GUI loop for running pdf-tools scripts."""
     root = Tk()
-    frame = ttk.Frame(root, padding=20)  # Frame widget to fit in root window
+    root.title("pdftools")
+    frame = ttk.Frame(root, padding=5)  # Frame widget to fit in root window
     frame.grid()
-    ttk.Label(frame, text="pdf-tools\n").grid(column=0, row=0)
+    logo = tkinter.PhotoImage(file="logo.png")
+    ttk.Label(frame, image=logo).grid(column=0, row=0)
     ttk.Button(frame, text="Split PDFs", command=split_pdfs).grid(column=0, row=1)
     ttk.Button(frame, text="Merge PDFs", command=merge_pdfs).grid(column=0, row=2)
     ttk.Button(frame, text="Exit", command=root.destroy).grid(column=0, row=3)
