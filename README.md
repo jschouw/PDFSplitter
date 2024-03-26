@@ -4,6 +4,7 @@
 
 </div>
 
+
 An easy solution for performing basic tasks with PDF files that are often locked behind 
 a paywall in popular software.
 
