@@ -6,7 +6,5 @@
 
 from utils import pdf_tools_gui
 
-# If module is run as a script, execute main()
-
 if __name__ == '__main__':
     pdf_tools_gui()  # Start tkinter GUI
