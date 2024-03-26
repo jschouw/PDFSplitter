@@ -39,11 +39,9 @@
 import os
 import tkinter
 from datetime import datetime
-from tkinter import *
-from tkinter import ttk
-
 from pypdf import PdfReader
 from pypdf import PdfWriter
+from tkinter import messagebox
 
 
 def split_pdfs():
@@ -57,7 +55,7 @@ def split_pdfs():
 
     # Loop through files for PDFs with even pages
     count = 0  # Count for total files split
-    for filename in os.listdir('.'):
+    for filename in os.listdir('..'):
         if filename.endswith('.pdf'):
             # Create PDF reader to handle files
             pdf_reader = PdfReader(filename)
@@ -86,7 +84,7 @@ def merge_pdfs():
 
     pdf_writer = PdfWriter()
     count = 0  # Count for total files merged
-    for filename in os.listdir('.'):
+    for filename in os.listdir('..'):
         if filename.endswith('.pdf'):
             pdf_reader = PdfReader(filename)
             count = count + 1
@@ -104,15 +102,4 @@ def merge_pdfs():
     tkinter.messagebox.showinfo("PDF Merge Completed", f"{count} files merged.")
 
 
-def pdf_tools_gui():
-    """Starts tkinter GUI loop for running pdf-tools scripts."""
-    root = Tk()
-    root.title("pdftools")
-    frame = ttk.Frame(root, padding=5)  # Frame widget to fit in root window
-    frame.grid()
-    logo = tkinter.PhotoImage(file="logo.png")
-    ttk.Label(frame, image=logo).grid(column=0, row=0)
-    ttk.Button(frame, text="Split PDFs", command=split_pdfs).grid(column=0, row=1)
-    ttk.Button(frame, text="Merge PDFs", command=merge_pdfs).grid(column=0, row=2)
-    ttk.Button(frame, text="Exit", command=root.destroy).grid(column=0, row=3)
-    root.mainloop()
+
