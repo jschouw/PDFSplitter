@@ -6,7 +6,7 @@
 
 
 # [brainstorming:]
-# functionality to-do: splice, split, metadata operations, extract text, extract images,
+# functionality to-do: splice, split, metadata operations
 # encrypt/password, reduce file size
 # Edit text and images, reorder, and delete pages in a PDF
 # Convert PDFs and export to Microsoft Word, Excel, and PowerPoint
@@ -102,6 +102,8 @@ def extract_images():
                 with open(str(count) + image_file_object.name, "wb") as fp:
                     fp.write(image_file_object.data)
                     count += 1
-
+            if count == 0:
+                return messagebox.showerror(title="No images in document",
+                                            message="No images in the selected PDF document.")
             return messagebox.showinfo(title="Image extraction successful",
                                        message="Images extracted successfully and saved to file.")
