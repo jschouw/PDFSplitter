@@ -23,12 +23,6 @@ from tkinter import messagebox
 from tkinter import filedialog
 
 
-
-
-def extract_images():
-    return print("extract_images function called")
-
-
 def merge_pdfs():
     """Allows the user to select multiple files to merge, as well as what order to merge them in."""
 
@@ -64,7 +58,7 @@ def merge_pdfs():
 
 
 def extract_text():
-    """Allows the user to extract text from a single file. """
+    """ Allows the user to extract text from a single file. """
 
     valid = False
     while not valid:
@@ -80,9 +74,34 @@ def extract_text():
             page = pdf_reader.pages[0]
             current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
             output = open(current_time + "-text_output.txt", "wb")
-            output.write(page.extract_text().encode())
+            output.write(page.extract_text().encode())  # encode function converts string to bytes
             output.close()
+
             return messagebox.showinfo(title="Text extraction successful",
                                        message="Text extracted successfully and saved to file.")
 
 
+
+def extract_images():
+    """ Allows the user to extract all of the images from a single file. """
+
+    valid = False
+    while not valid:
+        file = filedialog.askopenfilename(
+            filetypes=[("PDF files", "*.pdf")],
+            title="Please select a file to extract images from:",
+            initialdir=os.getcwd())
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 1
+        else:
+            pdf_reader = PdfReader(file)
+            page = pdf_reader.pages[0]
+            count = 0
+            for image_file_object in page.images:
+                with open(str(count) + image_file_object.name, "wb") as fp:
+                    fp.write(image_file_object.data)
+                    count += 1
+
+            return messagebox.showinfo(title="Image extraction successful",
+                                       message="Images extracted successfully and saved to file.")

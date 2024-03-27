@@ -14,6 +14,6 @@ def pdf_tools_gui():
     Label(frame, image=logo).grid(column=0, row=0)
     Button(frame, text="Merge PDFs", command=merge_pdfs).grid(column=0, row=1)
     Button(frame, text="Extract text", command=extract_text).grid(column=0, row=3)
-    Button(frame, text="Extract images (coming soon)", command=extract_images).grid(column=0, row=4)
+    Button(frame, text="Extract images", command=extract_images).grid(column=0, row=4)
     Button(frame, text="Exit", command=root.destroy).grid(column=0, row=5)
     root.mainloop()
