@@ -6,7 +6,7 @@
 
 
 # [brainstorming:]
-# functionality brainstorming: merge, splice, split, metadata operations, extract text, extract images,
+# functionality to-do: splice, split, metadata operations, extract text, extract images,
 # encrypt/password, reduce file size
 # Edit text and images, reorder, and delete pages in a PDF
 # Convert PDFs and export to Microsoft Word, Excel, and PowerPoint
@@ -23,34 +23,16 @@ from tkinter import messagebox
 from tkinter import filedialog
 
 
-def split_pdfs():
-    pdf_writer_front = PdfWriter()
-    pdf_writer_back = PdfWriter()
+def splice_pdfs():
+    return print("splice_pdfs function called")
 
-    # Loop through files for PDFs with even pages
-    count = 0  # Count for total files split
-    for filename in os.listdir('..'):
-        if filename.endswith('.pdf'):
-            # Create PDF reader to handle files
-            pdf_reader = PdfReader(filename)
-            # Only split files if they have an even number of pages
-            if len(pdf_reader.pages) % 2 == 0:
-                count = count + 1  # Increase count by 1
-                pagecount = len(pdf_reader.pages)
-                pdf_writer_front.append(fileobj=pdf_reader, pages=(0, int(pagecount / 2)))
-                pdf_writer_back.append(fileobj=pdf_reader, pages=(int(pagecount / 2), pagecount))
 
-    if count == 0:
-        return messagebox.showerror(title="Error: No files", message="Error: No PDF files to split.")
+def extract_text():
+    return print("extract_text function called")
 
-    current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-    front_output = open(current_time + "-front-split-output.pdf", "wb")
-    back_output = open(current_time + "-back-split-output.pdf", "wb")
-    pdf_writer_front.write(front_output)
-    pdf_writer_back.write(back_output)
-    pdf_writer_front.close()
-    pdf_writer_back.close()
-    messagebox.showinfo("PDF Split Completed", f"{count} file(s) split.")
+
+def extract_images():
+    return print("extract_images function called")
 
 
 def merge_pdfs():
@@ -82,4 +64,3 @@ def merge_pdfs():
             pdf_writer.close()
             return messagebox.showinfo(title="Merge successful",
                                        message="Files merged successfully.")
-
