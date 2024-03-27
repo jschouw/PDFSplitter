@@ -23,12 +23,6 @@ from tkinter import messagebox
 from tkinter import filedialog
 
 
-def splice_pdfs():
-    return print("splice_pdfs function called")
-
-
-def extract_text():
-    return print("extract_text function called")
 
 
 def extract_images():
@@ -62,5 +56,33 @@ def merge_pdfs():
             output = open(current_time + "-merged_output.pdf", "wb")  # Open the file to write to
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
+
+            valid = True  # For cleanup, but I'm not sure if it is even necessary with the return statement
+
             return messagebox.showinfo(title="Merge successful",
                                        message="Files merged successfully.")
+
+
+def extract_text():
+    """Allows the user to extract text from a single file. """
+
+    valid = False
+    while not valid:
+        file = filedialog.askopenfilename(
+            filetypes=[("PDF files", "*.pdf")],
+            title="Please select a file to extract text from:",
+            initialdir=os.getcwd())
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 1
+        else:
+            pdf_reader = PdfReader(file)
+            page = pdf_reader.pages[0]
+            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
+            output = open(current_time + "-text_output.txt", "wb")
+            output.write(page.extract_text().encode())
+            output.close()
+            return messagebox.showinfo(title="Text extraction successful",
+                                       message="Text extracted successfully and saved to file.")
+
+
