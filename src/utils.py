@@ -58,40 +58,28 @@ def merge_pdfs():
 
     valid = False
     while not valid:  # 'not' checks for false boolean value
-        file = filedialog.askopenfilenames(
+        file = filedialog.askopenfilenames( # Open file choosing dialog window
             filetypes=[("PDF files", "*.pdf")],
             title="Please select files to merge:",
             initialdir=os.getcwd())
 
-        if not file:
-            return 1  # If file returns false the cancel button was pressed, so nothing and return to main menu
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 1
 
         if len(file) <= 1:  # More than 1 file must be chosen to merge
             messagebox.showerror(title="Error: Not enough files chosen",
                                  message="Error: You must choose more than 1 file to merge.")
         else:
-            print('merge function here')
+            pdf_writer = PdfWriter()
 
+            for filename in file:
+                pdf_reader = PdfReader(filename)  # Read the PDF
+                pdf_writer.append(fileobj=pdf_reader)  # Write the PDF to the Writer object by appending to end of file
 
-"""
-    pdf_writer = PdfWriter()
-    count = 0  # Count for total files merged
-    for filename in os.listdir('..'):
-        if filename.endswith('.pdf'):
-            pdf_reader = PdfReader(filename)
-            count = count + 1
-            pdf_writer.append(fileobj=pdf_reader)
-
-    if count <= 1:
-        return tkinter.messagebox.showerror(title="Error: Not enough files",
-                                    message="Error: Not enough PDF files to complete merge operation.")
-
-    current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-
-    output = open(current_time + "-merged_output.pdf", "wb")
-    pdf_writer.write(output)
-    pdf_writer.close()
-    tkinter.messagebox.showinfo("PDF Merge Completed", f"{count} files merged.")
-"""
-
+            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
+            output = open(current_time + "-merged_output.pdf", "wb")  # Open the file to write to
+            pdf_writer.write(output)  # Write the PdfWriter object to the open file
+            pdf_writer.close()
+            return messagebox.showinfo(title="Merge successful",
+                                       message="Files merged successfully.")
 
