@@ -4,9 +4,10 @@
     Functionality and logic of the program, including both GUI creation and PDF manipulation.
 """
 
+# to-do: create output.write() function that automatically encodes strings (check extract_metadata function)
 
 # [brainstorming:]
-# functionality to-do: splice, split, metadata operations
+# functionality to-do: splice, metadata operations
 # encrypt/password, reduce file size
 # Edit text and images, reorder, and delete pages in a PDF
 # Convert PDFs and export to Microsoft Word, Excel, and PowerPoint
@@ -28,7 +29,7 @@ def merge_pdfs():
 
     valid = False
     while not valid:  # 'not' checks for false boolean value
-        file = filedialog.askopenfilenames( # Open file choosing dialog window
+        file = filedialog.askopenfilenames(  # Open file choosing dialog window
             filetypes=[("PDF files", "*.pdf")],
             title="Please select files to merge:",
             initialdir=os.getcwd())
@@ -58,7 +59,7 @@ def merge_pdfs():
 
 
 def extract_text():
-    """ Allows the user to extract text from a single file. """
+    """ Extracts the text from a PDF file and saves it to a text file. """
 
     valid = False
     while not valid:
@@ -73,17 +74,18 @@ def extract_text():
             pdf_reader = PdfReader(file)
             page = pdf_reader.pages[0]
             current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
-            output = open(current_time + "-text_output.txt", "wb")
+            filename = current_time + "-text_output.txt"
+            output = open(filename, "wb")
             output.write(page.extract_text().encode())  # encode function converts string to bytes
             output.close()
 
             return messagebox.showinfo(title="Text extraction successful",
-                                       message="Text extracted successfully and saved to file.")
-
+                                       message="Text extracted successfully and saved to:\n\n" +
+                                       filename + ".")
 
 
 def extract_images():
-    """ Allows the user to extract all of the images from a single file. """
+    """ Extracts the images from a PDF file and saves them to the program's directory. """
 
     valid = False
     while not valid:
@@ -107,3 +109,55 @@ def extract_images():
                                             message="No images in the selected PDF document.")
             return messagebox.showinfo(title="Image extraction successful",
                                        message="Images extracted successfully and saved to file.")
+
+
+def extract_metadata():
+    """ Extracts the metadata of a PDF file and saves it to a text file. """
+
+    valid = False
+    while not valid:
+        file = filedialog.askopenfilename(
+            filetypes=[("PDF files", "*.pdf")],
+            title="Please select a file to extract metadata from:",
+            initialdir=os.getcwd())
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 1
+        else:
+            pdf_reader = PdfReader(file)
+
+            meta = pdf_reader.metadata
+
+            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
+            filename = current_time + "-metadata_output.txt"
+            output = open(filename, "wb")
+
+            output.write("******************************************************************".encode())
+            output.write(str(filename).encode())
+            output.write("******************************************************************".encode())
+            output.write("\n\n".encode())
+            output.write(("Metadata extracted from " + file.title() + "\n").encode())
+            output.write(("# of metadata fields: " + str(meta.__len__()) + "\n\n").encode())
+            output.write("****************************************\n".encode())
+            output.write("[Raw Metadata Table:]\n\n".encode())
+            output.write(str(meta).encode())
+            output.write("\n\n****************************************".encode())
+            output.write("\n\n\n\n[Formatted Metadata:]\n".encode())
+            formatted_text = ""
+            count = 1
+            for item in meta:
+                formatted_text = (formatted_text + "\n*******" +
+                                  "\n[Metadata Field # " + str(count) + "]" +
+                                  "\n[Field Name:] " + str(item) +
+                                  "\n[Field Value:] " + meta.get(item) +
+                                  "\n*******\n\n")
+                count = count + 1
+
+            output.write(formatted_text.encode())
+
+            output.close()
+
+            return messagebox.showinfo(title="Metadata extraction successful",
+                                       message="Metadata extracted successfully and saved to:\n\n" +
+                                       filename + ".")
+
