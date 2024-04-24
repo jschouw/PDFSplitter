@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Functionality and logic of the program, including both GUI creation and PDF manipulation.
+    Functionality and logic of the program.
 """
 
 # to-do: create output.write() function that automatically encodes strings (check extract_metadata function)
@@ -17,42 +17,47 @@
 # ****************************************************************************
 
 import os
+import tkinter
 from datetime import datetime
 from pypdf import PdfReader
 from pypdf import PdfWriter
 from tkinter import messagebox
 from tkinter import filedialog
-
+from tkinter import Tk
 
 def merge_pdfs():
     """Allows the user to select multiple files to merge, as well as what order to merge them in."""
 
-    valid = False
-    while not valid:  # 'not' checks for false boolean value
-        file = filedialog.askopenfilenames(  # Open file choosing dialog window
+    while True:  # Loop to open a file dialog
+        file = filedialog.askopenfilenames(
             filetypes=[("PDF files", "*.pdf")],
             title="Please select files to merge:",
             initialdir=os.getcwd())
 
-        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
-            return 1
+        if not file:  # If file returns false the cancel button was pressed, so do nothing and return to main menu
+            return 0
 
-        if len(file) <= 1:  # More than 1 file must be chosen to merge
+        if len(file) < 2:  # If less than two files are selected, display error and return to file dialog
             messagebox.showerror(title="Error: Not enough files chosen",
                                  message="Error: You must choose more than 1 file to merge.")
+
         else:
+            save_filename = filedialog.asksaveasfilename(
+                initialfile="merged_output.pdf",
+                initialdir=os.getcwd(),
+                title="Please enter filename for merged output:",
+                filetypes=[("PDF files", "*.pdf")]
+            )
+
             pdf_writer = PdfWriter()
 
             for filename in file:
                 pdf_reader = PdfReader(filename)  # Read the PDF
                 pdf_writer.append(fileobj=pdf_reader)  # Write the PDF to the Writer object by appending to end of file
 
-            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
-            output = open(current_time + "-merged_output.pdf", "wb")  # Open the file to write to
+            output = open(save_filename, "wb")  # Open the file to write to
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
-
-            valid = True  # For cleanup, but I'm not sure if it is even necessary with the return statement
 
             return messagebox.showinfo(title="Merge successful",
                                        message="Files merged successfully.")
