@@ -87,6 +87,9 @@ def extract_text():
 def extract_images():
     """ Extracts the images from a PDF file and saves them to the program's directory. """
 
+    """
+        https://pypdf.readthedocs.io/en/stable/user/metadata.html
+    """
     valid = False
     while not valid:
         file = filedialog.askopenfilename(
@@ -109,6 +112,56 @@ def extract_images():
                                             message="No images in the selected PDF document.")
             return messagebox.showinfo(title="Image extraction successful",
                                        message="Images extracted successfully and saved to file.")
+
+
+def edit_metadata():
+    """ Allows the user to edit the metadata of a PDF file. """
+    valid = False
+    while not valid:
+        file = filedialog.askopenfilename(
+            filetypes=[("PDF files", "*.pdf")],
+            title="Please select a file to edit:",
+            initialdir=os.getcwd())
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 1
+        else:
+            pdf_reader = PdfReader(file)
+            pdf_writer = PdfWriter(file)
+
+            for page in pdf_reader.pages:
+                pdf_writer.add_page(page)
+
+            metadata = pdf_reader.metadata
+            pdf_writer.add_metadata(metadata)
+
+            utc_time = "-05'00'"  # UTC time optional
+            time = datetime.now().strftime(f"D\072%Y%m%d%H%M%S{utc_time}")
+
+
+
+            for item in metadata:
+                messagebox.askquestion(title=("Edit field: " + str(item)),
+                                       message="Field value currently " + metadata.get(item),
+                                       )
+
+            pdf_writer.add_metadata(
+                {
+                    "/Author": "Martin",
+                    "/Producer": "Libre Writer",
+                    "/Title": "Title",
+                    "/Subject": "Subject",
+                    "/Keywords": "Keywords",
+                    "/CreationDate": time,
+                    "/ModDate": time,
+                    "/Creator": "Creator",
+                })
+
+            with open("meta-pdf.pdf", "wb") as f:
+                pdf_writer.write(f)
+
+            return messagebox.showinfo(title="Metadata edit successful",
+                                       message="Metadata successfully edited.")
 
 
 def extract_metadata():
