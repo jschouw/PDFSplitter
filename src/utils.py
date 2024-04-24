@@ -17,37 +17,27 @@
 # ****************************************************************************
 
 import os
-import tkinter
 from datetime import datetime
 from pypdf import PdfReader
 from pypdf import PdfWriter
 from tkinter import messagebox
 from tkinter import filedialog
-from tkinter import Tk
+import src.gui as gui
 
 def merge_pdfs():
     """Allows the user to select multiple files to merge, as well as what order to merge them in."""
 
     while True:  # Loop to open a file dialog
-        file = filedialog.askopenfilenames(
-            filetypes=[("PDF files", "*.pdf")],
-            title="Please select files to merge:",
-            initialdir=os.getcwd())
+        file = gui.merge_file_selection_window()
 
         if not file:  # If file returns false the cancel button was pressed, so do nothing and return to main menu
             return 0
 
         if len(file) < 2:  # If less than two files are selected, display error and return to file dialog
-            messagebox.showerror(title="Error: Not enough files chosen",
-                                 message="Error: You must choose more than 1 file to merge.")
+            gui.merge_error_not_enough_files()
 
         else:
-            save_filename = filedialog.asksaveasfilename(
-                initialfile="merged_output.pdf",
-                initialdir=os.getcwd(),
-                title="Please enter filename for merged output:",
-                filetypes=[("PDF files", "*.pdf")]
-            )
+            save_filename = gui.merge_filename_saveas_dialog()
 
             pdf_writer = PdfWriter()
 
@@ -59,8 +49,7 @@ def merge_pdfs():
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
 
-            return messagebox.showinfo(title="Merge successful",
-                                       message="Files merged successfully.")
+            return gui.merge_successful_dialog()
 
 
 def extract_text():

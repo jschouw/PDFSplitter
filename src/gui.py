@@ -19,3 +19,34 @@ def pdf_tools_gui():
     Button(frame, text="Extract metadata", command=extract_metadata).grid(column=0, row=6)
     Button(frame, text="Exit", command=root.destroy).grid(column=0, row=7)
     root.mainloop()
+
+
+def merge_file_selection_window():
+    return filedialog.askopenfilenames(
+        filetypes=[("PDF files", "*.pdf")],
+        title="Please select files to merge:",
+        initialdir=os.getcwd()
+    )
+
+
+def merge_error_not_enough_files():
+    return messagebox.showerror(title="Error: Not enough files chosen",
+                                message="Error: You must choose more than 1 file to merge.")
+
+
+def merge_filename_saveas_dialog():
+    return filedialog.asksaveasfilename(
+        initialfile="merged_output.pdf",
+        initialdir=os.getcwd(),
+        title="Please enter filename for merged output:",
+        filetypes=[("PDF files", "*.pdf")]
+    )
+
+
+def merge_successful_dialog():
+    return filedialog.asksaveasfilename(
+        initialfile="merged_output.pdf",
+        initialdir=os.getcwd(),
+        title="Please enter filename for merged output:",
+        filetypes=[("PDF files", "*.pdf")]
+    )
