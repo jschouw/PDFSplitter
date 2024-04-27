@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
     Functionality and logic of the program.
 """
@@ -24,6 +22,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 import src.gui as gui
 
+
 def merge_pdfs():
     """Allows the user to select multiple files to merge, as well as what order to merge them in."""
 
@@ -45,7 +44,7 @@ def merge_pdfs():
                 pdf_reader = PdfReader(filename)  # Read the PDF
                 pdf_writer.append(fileobj=pdf_reader)  # Write the PDF to the Writer object by appending to end of file
 
-            output = open(save_filename, "wb")  # Open the file to write to
+            output = open(save_filename, 'wb')  # Open the file to write to
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
 
@@ -58,8 +57,8 @@ def extract_text():
     valid = False
     while not valid:
         file = filedialog.askopenfilename(
-            filetypes=[("PDF files", "*.pdf")],
-            title="Please select a file to extract text from:",
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to extract text from:',
             initialdir=os.getcwd())
 
         if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
@@ -67,15 +66,15 @@ def extract_text():
         else:
             pdf_reader = PdfReader(file)
             page = pdf_reader.pages[0]
-            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
-            filename = current_time + "-text_output.txt"
-            output = open(filename, "wb")
+            current_time = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))  # Get current time for unique filename
+            filename = current_time + '-text_output.txt'
+            output = open(filename, 'wb')
             output.write(page.extract_text().encode())  # encode function converts string to bytes
             output.close()
 
-            return messagebox.showinfo(title="Text extraction successful",
-                                       message="Text extracted successfully and saved to:\n\n" +
-                                       filename + ".")
+            return messagebox.showinfo(title='Text extraction successful',
+                                       message='Text extracted successfully and saved to:\n\n' +
+                                               filename + '.')
 
 
 def extract_images():
@@ -87,8 +86,8 @@ def extract_images():
     valid = False
     while not valid:
         file = filedialog.askopenfilename(
-            filetypes=[("PDF files", "*.pdf")],
-            title="Please select a file to extract images from:",
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to extract images from:',
             initialdir=os.getcwd())
 
         if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
@@ -98,14 +97,14 @@ def extract_images():
             page = pdf_reader.pages[0]
             count = 0
             for image_file_object in page.images:
-                with open(str(count) + image_file_object.name, "wb") as fp:
+                with open(str(count) + image_file_object.name, 'wb') as fp:
                     fp.write(image_file_object.data)
                     count += 1
             if count == 0:
-                return messagebox.showerror(title="No images in document",
-                                            message="No images in the selected PDF document.")
-            return messagebox.showinfo(title="Image extraction successful",
-                                       message="Images extracted successfully and saved to file.")
+                return messagebox.showerror(title='No images in document',
+                                            message='No images in the selected PDF document.')
+            return messagebox.showinfo(title='Image extraction successful',
+                                       message='Images extracted successfully and saved to file.')
 
 
 def edit_metadata():
@@ -113,8 +112,8 @@ def edit_metadata():
     valid = False
     while not valid:
         file = filedialog.askopenfilename(
-            filetypes=[("PDF files", "*.pdf")],
-            title="Please select a file to edit:",
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to edit:',
             initialdir=os.getcwd())
 
         if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
@@ -130,32 +129,30 @@ def edit_metadata():
             pdf_writer.add_metadata(metadata)
 
             utc_time = "-05'00'"  # UTC time optional
-            time = datetime.now().strftime(f"D\072%Y%m%d%H%M%S{utc_time}")
-
-
+            time = datetime.now().strftime(f'D\072%Y%m%d%H%M%S{utc_time}')
 
             for item in metadata:
-                messagebox.askquestion(title=("Edit field: " + str(item)),
-                                       message="Field value currently " + metadata.get(item),
+                messagebox.askquestion(title=('Edit field: ' + str(item)),
+                                       message='Field value currently ' + metadata.get(item),
                                        )
 
             pdf_writer.add_metadata(
                 {
-                    "/Author": "Martin",
-                    "/Producer": "Libre Writer",
-                    "/Title": "Title",
-                    "/Subject": "Subject",
-                    "/Keywords": "Keywords",
-                    "/CreationDate": time,
-                    "/ModDate": time,
-                    "/Creator": "Creator",
+                    '/Author': 'Martin',
+                    '/Producer': 'Libre Writer',
+                    '/Title': 'Title',
+                    '/Subject': 'Subject',
+                    '/Keywords': 'Keywords',
+                    '/CreationDate': time,
+                    '/ModDate': time,
+                    '/Creator': 'Creator',
                 })
 
-            with open("meta-pdf.pdf", "wb") as f:
+            with open('meta-pdf.pdf', 'wb') as f:
                 pdf_writer.write(f)
 
-            return messagebox.showinfo(title="Metadata edit successful",
-                                       message="Metadata successfully edited.")
+            return messagebox.showinfo(title='Metadata edit successful',
+                                       message='Metadata successfully edited.')
 
 
 def extract_metadata():
@@ -164,8 +161,8 @@ def extract_metadata():
     valid = False
     while not valid:
         file = filedialog.askopenfilename(
-            filetypes=[("PDF files", "*.pdf")],
-            title="Please select a file to extract metadata from:",
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to extract metadata from:',
             initialdir=os.getcwd())
 
         if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
@@ -175,36 +172,35 @@ def extract_metadata():
 
             meta = pdf_reader.metadata
 
-            current_time = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))  # Get current time for unique filename
-            filename = current_time + "-metadata_output.txt"
-            output = open(filename, "wb")
+            current_time = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))  # Get current time for unique filename
+            filename = current_time + '-metadata_output.txt'
+            output = open(filename, 'wb')
 
-            output.write("******************************************************************".encode())
+            output.write('******************************************************************'.encode())
             output.write(str(filename).encode())
-            output.write("******************************************************************".encode())
-            output.write("\n\n".encode())
-            output.write(("Metadata extracted from " + file.title() + "\n").encode())
-            output.write(("# of metadata fields: " + str(meta.__len__()) + "\n\n").encode())
-            output.write("****************************************\n".encode())
-            output.write("[Raw Metadata Table:]\n\n".encode())
+            output.write('******************************************************************'.encode())
+            output.write('\n\n'.encode())
+            output.write(('Metadata extracted from ' + file.title() + '\n').encode())
+            output.write(('# of metadata fields: ' + str(meta.__len__()) + '\n\n').encode())
+            output.write('****************************************\n'.encode())
+            output.write('[Raw Metadata Table:]\n\n'.encode())
             output.write(str(meta).encode())
-            output.write("\n\n****************************************".encode())
-            output.write("\n\n\n\n[Formatted Metadata:]\n".encode())
-            formatted_text = ""
+            output.write('\n\n****************************************'.encode())
+            output.write('\n\n\n\n[Formatted Metadata:]\n'.encode())
+            formatted_text = ''
             count = 1
             for item in meta:
-                formatted_text = (formatted_text + "\n*******" +
-                                  "\n[Metadata Field # " + str(count) + "]" +
-                                  "\n[Field Name:] " + str(item) +
-                                  "\n[Field Value:] " + meta.get(item) +
-                                  "\n*******\n\n")
+                formatted_text = (formatted_text + '\n*******' +
+                                  '\n[Metadata Field # ' + str(count) + ']' +
+                                  '\n[Field Name:] ' + str(item) +
+                                  '\n[Field Value:] ' + meta.get(item) +
+                                  '\n*******\n\n')
                 count = count + 1
 
             output.write(formatted_text.encode())
 
             output.close()
 
-            return messagebox.showinfo(title="Metadata extraction successful",
-                                       message="Metadata extracted successfully and saved to:\n\n" +
-                                       filename + ".")
-
+            return messagebox.showinfo(title='Metadata extraction successful',
+                                       message='Metadata extracted successfully and saved to:\n\n' +
+                                               filename + '.')
