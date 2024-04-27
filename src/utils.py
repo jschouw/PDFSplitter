@@ -27,12 +27,12 @@ def merge_pdfs():
     """Allows the user to select multiple files to merge, as well as what order to merge them in."""
 
     while True:  # Loop to open a file dialog
-        file = gui.merge_file_selection_window()
+        files = gui.merge_file_selection_window()
 
-        if not file:  # If file returns false the cancel button was pressed, so do nothing and return to main menu
+        if not files:  # If files returns false the cancel button was pressed, so do nothing and return to main menu
             return 0
 
-        if len(file) < 2:  # If less than two files are selected, display error and return to file dialog
+        if len(files) < 2:  # If less than two files are selected, display error and return to file dialog
             gui.merge_error_not_enough_files()
 
         else:
@@ -40,41 +40,36 @@ def merge_pdfs():
 
             pdf_writer = PdfWriter()
 
-            for filename in file:
-                pdf_reader = PdfReader(filename)  # Read the PDF
-                pdf_writer.append(fileobj=pdf_reader)  # Write the PDF to the Writer object by appending to end of file
+            for filename in files:  # Loop through selected files
+                pdf_reader = PdfReader(filename)
+                pdf_writer.append(pdf_reader)  # Write the PDF to the Writer object by appending to end of file
 
             output = open(save_filename, 'wb')  # Open the file to write to
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
 
-            return gui.merge_successful_dialog(os.path.basename(save_filename))
+            return gui.save_successful_dialog(os.path.basename(save_filename))
 
 
 def extract_text():
     """ Extracts the text from a PDF file and saves it to a text file. """
 
-    valid = False
-    while not valid:
-        file = filedialog.askopenfilename(
-            filetypes=[('PDF files', '*.pdf')],
-            title='Please select a file to extract text from:',
-            initialdir=os.getcwd())
+    while True:  # Loop to open a file dialog
+        file = gui.extract_text_file_selection_dialog()
 
-        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
-            return 1
+        if not file:  # If file returns false the cancel button was pressed, so do nothing and return to main menu
+            return 0
+
         else:
+            save_filename = gui.extract_text_filename_saveas_dialog()
+
             pdf_reader = PdfReader(file)
             page = pdf_reader.pages[0]
-            current_time = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))  # Get current time for unique filename
-            filename = current_time + '-text_output.txt'
-            output = open(filename, 'wb')
+            output = open(save_filename, 'wb')
             output.write(page.extract_text().encode())  # encode function converts string to bytes
             output.close()
 
-            return messagebox.showinfo(title='Text extraction successful',
-                                       message='Text extracted successfully and saved to:\n\n' +
-                                               filename + '.')
+            return gui.save_successful_dialog(os.path.basename(save_filename))
 
 
 def extract_images():
