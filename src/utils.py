@@ -64,9 +64,14 @@ def extract_text():
             save_filename = gui.extract_text_filename_saveas_dialog()
 
             pdf_reader = PdfReader(file)
-            page = pdf_reader.pages[0]
             output = open(save_filename, 'wb')
-            output.write(page.extract_text().encode())  # encode function converts string to bytes
+
+            for page in pdf_reader.pages:
+                output.write(page.extract_text(
+                    extraction_mode='layout',
+                    layout_mode_space_vertically=False).encode()  # Encode function converts string to bytes
+                )
+
             output.close()
 
             return gui.save_successful_dialog(os.path.basename(save_filename))
