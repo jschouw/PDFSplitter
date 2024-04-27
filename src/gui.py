@@ -71,3 +71,20 @@ def extract_text_formatting_warning():
                 title='Formatting Warning',
                 message='Please note that extracted text is likely to be poorly formatted.'
             )
+
+
+def extract_images_file_selection_dialog():
+    return filedialog.askopenfilename(
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to extract ímages from:',
+            initialdir=os.getcwd())
+
+
+def extract_images_error_no_images():
+    messagebox.showerror(title='No images in document',
+                         message='No images in the selected PDF document.')
+
+
+def extract_images_successful(extracted_images_count):
+    messagebox.showinfo(title='Image extraction successful',
+                        message=f'{extracted_images_count} images extracted and saved to file.')

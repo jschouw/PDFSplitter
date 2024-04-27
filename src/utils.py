@@ -20,6 +20,7 @@ from pypdf import PdfReader
 from pypdf import PdfWriter
 from tkinter import messagebox
 from tkinter import filedialog
+from uuid import uuid4
 import src.gui as gui
 
 
@@ -66,45 +67,42 @@ def extract_text():
             pdf_reader = PdfReader(file)
             output = open(save_filename, 'wb')
 
-            for page in pdf_reader.pages:
+            for page in pdf_reader.pages:  # Loop through pages, extract text, write to open file
                 output.write(page.extract_text(
-                    extraction_mode='layout',
+                    extraction_mode='layout',  # Attempts to preserve layout in source PDF
                     layout_mode_space_vertically=False).encode()  # Encode function converts string to bytes
                 )
 
             output.close()
             gui.save_successful_dialog(os.path.basename(save_filename))
+
             return gui.extract_text_formatting_warning()
 
 
 def extract_images():
     """ Extracts the images from a PDF file and saves them to the program's directory. """
 
-    """
-        https://pypdf.readthedocs.io/en/stable/user/metadata.html
-    """
-    valid = False
-    while not valid:
-        file = filedialog.askopenfilename(
-            filetypes=[('PDF files', '*.pdf')],
-            title='Please select a file to extract images from:',
-            initialdir=os.getcwd())
+    while True:  # Loop to open a file dialog
+        file = gui.extract_images_file_selection_dialog()
 
         if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
-            return 1
+            return 0
+
         else:
             pdf_reader = PdfReader(file)
-            page = pdf_reader.pages[0]
-            count = 0
-            for image_file_object in page.images:
-                with open(str(count) + image_file_object.name, 'wb') as fp:
-                    fp.write(image_file_object.data)
-                    count += 1
-            if count == 0:
-                return messagebox.showerror(title='No images in document',
-                                            message='No images in the selected PDF document.')
-            return messagebox.showinfo(title='Image extraction successful',
-                                       message='Images extracted successfully and saved to file.')
+            count = 0  # Count number of images to later display an error if there are none in the PDF
+
+            for page in pdf_reader.pages:  # Loop through all pages in PDF
+                for image_file_object in page.images:  # Loop through all images on each page
+                    # Open file to write, using UUID4 to create a unique filename
+                    with open(f'{uuid4()} - {image_file_object.name}', 'wb') as image_output:
+                        image_output.write(image_file_object.data)
+                        count += 1
+
+                if not count:
+                    return gui.extract_images_error_no_images()
+
+            return gui.extract_images_successful(count)
 
 
 def edit_metadata():
