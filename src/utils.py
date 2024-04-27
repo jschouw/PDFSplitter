@@ -15,6 +15,7 @@
 # ****************************************************************************
 
 import os
+import json
 from datetime import datetime
 from pypdf import PdfReader
 from pypdf import PdfWriter
@@ -105,6 +106,27 @@ def extract_images():
             return gui.extract_images_successful(count)
 
 
+def extract_metadata():
+    """ Extracts the metadata of a PDF file and saves it to a text file. """
+
+    while True:  # Loop to open a file dialog
+        file = gui.extract_metadata_file_selection_dialog()
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 0
+
+        else:
+            save_filename = gui.extract_metadata_filename_saveas_dialog()
+
+            pdf_reader = PdfReader(file)
+            meta = pdf_reader.metadata
+
+            with open(save_filename, 'w') as output_file:
+                json.dump(meta, output_file, indent=4)
+
+            return gui.save_successful_dialog(os.path.basename(save_filename))
+
+
 def edit_metadata():
     """ Allows the user to edit the metadata of a PDF file. """
     valid = False
@@ -152,53 +174,3 @@ def edit_metadata():
             return messagebox.showinfo(title='Metadata edit successful',
                                        message='Metadata successfully edited.')
 
-
-def extract_metadata():
-    """ Extracts the metadata of a PDF file and saves it to a text file. """
-
-    valid = False
-    while not valid:
-        file = filedialog.askopenfilename(
-            filetypes=[('PDF files', '*.pdf')],
-            title='Please select a file to extract metadata from:',
-            initialdir=os.getcwd())
-
-        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
-            return 1
-        else:
-            pdf_reader = PdfReader(file)
-
-            meta = pdf_reader.metadata
-
-            current_time = str(datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))  # Get current time for unique filename
-            filename = current_time + '-metadata_output.txt'
-            output = open(filename, 'wb')
-
-            output.write('******************************************************************'.encode())
-            output.write(str(filename).encode())
-            output.write('******************************************************************'.encode())
-            output.write('\n\n'.encode())
-            output.write(('Metadata extracted from ' + file.title() + '\n').encode())
-            output.write(('# of metadata fields: ' + str(meta.__len__()) + '\n\n').encode())
-            output.write('****************************************\n'.encode())
-            output.write('[Raw Metadata Table:]\n\n'.encode())
-            output.write(str(meta).encode())
-            output.write('\n\n****************************************'.encode())
-            output.write('\n\n\n\n[Formatted Metadata:]\n'.encode())
-            formatted_text = ''
-            count = 1
-            for item in meta:
-                formatted_text = (formatted_text + '\n*******' +
-                                  '\n[Metadata Field # ' + str(count) + ']' +
-                                  '\n[Field Name:] ' + str(item) +
-                                  '\n[Field Value:] ' + meta.get(item) +
-                                  '\n*******\n\n')
-                count = count + 1
-
-            output.write(formatted_text.encode())
-
-            output.close()
-
-            return messagebox.showinfo(title='Metadata extraction successful',
-                                       message='Metadata extracted successfully and saved to:\n\n' +
-                                               filename + '.')

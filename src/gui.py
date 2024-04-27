@@ -15,8 +15,8 @@ def pdf_tools_gui():
     Button(frame, text='Merge PDFs', command=merge_pdfs).grid(column=0, row=1)
     Button(frame, text='Extract text', command=extract_text).grid(column=0, row=3)
     Button(frame, text='Extract images', command=extract_images).grid(column=0, row=4)
-    Button(frame, text='Edit metadata', command=edit_metadata).grid(column=0, row=5)
-    Button(frame, text='Extract metadata', command=extract_metadata).grid(column=0, row=6)
+    Button(frame, text='Extract metadata', command=extract_metadata).grid(column=0, row=5)
+    Button(frame, text='Edit metadata', command=edit_metadata).grid(column=0, row=6)
     Button(frame, text='Exit', command=root.destroy).grid(column=0, row=7)
     root.mainloop()
 
@@ -88,3 +88,19 @@ def extract_images_error_no_images():
 def extract_images_successful(extracted_images_count):
     messagebox.showinfo(title='Image extraction successful',
                         message=f'{extracted_images_count} images extracted and saved to file.')
+
+
+def extract_metadata_file_selection_dialog():
+    return filedialog.askopenfilename(
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to extract metadata from:',
+            initialdir=os.getcwd())
+
+
+def extract_metadata_filename_saveas_dialog():
+    return filedialog.asksaveasfilename(
+            filetypes=[('.txt files', '*.txt')],
+            title='Please enter filename for metadata output:',
+            initialdir=os.getcwd(),
+            initialfile='metadata-output.txt')
+
