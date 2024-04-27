@@ -36,17 +36,14 @@ def merge_error_not_enough_files():
 
 def merge_filename_saveas_dialog():
     return filedialog.asksaveasfilename(
-        initialfile="merged_output.pdf",
         initialdir=os.getcwd(),
         title="Please enter filename for merged output:",
         filetypes=[("PDF files", "*.pdf")]
     )
 
 
-def merge_successful_dialog():
-    return filedialog.asksaveasfilename(
-        initialfile="merged_output.pdf",
-        initialdir=os.getcwd(),
-        title="Please enter filename for merged output:",
-        filetypes=[("PDF files", "*.pdf")]
+def merge_successful_dialog(filename):
+    return messagebox.showinfo(
+        title='Save successful',
+        message=f'{filename} successfully saved.'
     )

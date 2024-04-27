@@ -49,7 +49,7 @@ def merge_pdfs():
             pdf_writer.write(output)  # Write the PdfWriter object to the open file
             pdf_writer.close()
 
-            return gui.merge_successful_dialog()
+            return gui.merge_successful_dialog(os.path.basename(save_filename))
 
 
 def extract_text():
