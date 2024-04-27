@@ -127,9 +127,29 @@ def encrypt_pdf_successful_dialog(encrypted_filename):
                         message=f'Encrypted PDF saved as {encrypted_filename}.')
 
 
-
 def decrypt_pdf_file_selection_dialog():
     return filedialog.askopenfilename(
             filetypes=[('PDF files', '*.pdf')],
             title='Please select a file to decrypt:',
             initialdir=os.getcwd())
+
+
+def enter_decrypt_password_dialog():
+    return simpledialog.askstring('Password Input',
+                                  'Please input a password to decrypt the PDF:')
+
+
+def decrypt_pdf_successful_dialog(decrypted_filename):
+    return messagebox.showinfo(title='PDF decryption successful',
+                               message=f'Decrypted PDF saved as {decrypted_filename}.')
+
+
+def decrypt_pdf_bad_password_error():
+    return messagebox.showerror(title='Incorrect Password',
+                                message='Password incorrect, try again.')
+
+
+def decrypt_pdf_not_encrypted_error():
+    messagebox.showerror(title='PDF is not encrypted',
+                         message='You must choose an encrypted PDF to decrypt it.')
+

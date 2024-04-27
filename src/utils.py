@@ -57,7 +57,7 @@ def extract_text():
                 output.write(page.extract_text(
                     extraction_mode='layout',  # Attempts to preserve layout in source PDF
                     layout_mode_space_vertically=False).encode()  # Encode function converts string to bytes
-                )
+                             )
 
             output.close()
             gui.save_successful_dialog(os.path.basename(save_filename))
@@ -140,8 +140,39 @@ def encrypt_pdf():
                 else:
                     return 0
 
+
 def decrypt_pdf():
     """ Decrypts an encrypted PDF file with a password. """
 
-    pass
+    while True:  # Loop to open a file dialog
+        file = gui.decrypt_pdf_file_selection_dialog()
 
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 0
+
+        else:
+            while True:  # Start another loop, in case user leaves password field empty
+
+                pdf_reader = PdfReader(file)
+
+                if pdf_reader.is_encrypted:
+
+                    password = gui.enter_decrypt_password_dialog()
+
+                    if password:
+
+                        if pdf_reader.decrypt(password):
+                            pdf_writer = PdfWriter(clone_from=pdf_reader)
+
+                            save_file_name = f'{file} - decrypted - {uuid4()}.pdf'
+
+                            with open(save_file_name, "wb") as f:
+                                pdf_writer.write(f)
+
+                            return gui.decrypt_pdf_successful_dialog(os.path.basename(save_file_name))
+                        else:
+                            return gui.decrypt_pdf_bad_password_error()
+                    else:
+                        return 0
+                else:
+                    return gui.decrypt_pdf_not_encrypted_error()
