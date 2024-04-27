@@ -73,8 +73,8 @@ def extract_text():
                 )
 
             output.close()
-
-            return gui.save_successful_dialog(os.path.basename(save_filename))
+            gui.save_successful_dialog(os.path.basename(save_filename))
+            return gui.extract_text_formatting_warning()
 
 
 def extract_images():

@@ -64,3 +64,10 @@ def extract_text_filename_saveas_dialog():
             initialdir=os.getcwd(),
             initialfile='text-output.txt'
     )
+
+
+def extract_text_formatting_warning():
+    return messagebox.showwarning(
+                title='Formatting Warning',
+                message='Please note that extracted text is likely to be poorly formatted.'
+            )
