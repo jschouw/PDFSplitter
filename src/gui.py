@@ -1,3 +1,6 @@
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter import *
 from tkinter.ttk import *
 from src.utils import *
@@ -16,7 +19,9 @@ def pdf_tools_gui():
     Button(frame, text='Extract text', command=extract_text).grid(column=0, row=3)
     Button(frame, text='Extract images', command=extract_images).grid(column=0, row=4)
     Button(frame, text='Extract metadata', command=extract_metadata).grid(column=0, row=5)
-    Button(frame, text='Exit', command=root.destroy).grid(column=0, row=7)
+    Button(frame, text='Encrypt PDF', command=encrypt_pdf).grid(column=0, row=6)
+    Button(frame, text='Decrypt PDF', command=decrypt_pdf).grid(column=0, row=7)
+    Button(frame, text='Exit', command=root.destroy).grid(column=0, row=8)
     root.mainloop()
 
 
@@ -103,3 +108,28 @@ def extract_metadata_filename_saveas_dialog():
             initialdir=os.getcwd(),
             initialfile='metadata-output.txt')
 
+
+def encrypt_pdf_file_selection_dialog():
+    return filedialog.askopenfilename(
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a PDF to encrypt:',
+            initialdir=os.getcwd())
+
+
+def enter_encrypt_password_dialog():
+    return simpledialog.askstring('Password Input',
+                                  'Please input a password for the encrypted PDF:',
+                                  initialvalue='(Will not be encrypted if entry left empty.)')
+
+
+def encrypt_pdf_successful_dialog(encrypted_filename):
+    return messagebox.showinfo(title='PDF encryption successful',
+                        message=f'Encrypted PDF saved as {encrypted_filename}.')
+
+
+
+def decrypt_pdf_file_selection_dialog():
+    return filedialog.askopenfilename(
+            filetypes=[('PDF files', '*.pdf')],
+            title='Please select a file to decrypt:',
+            initialdir=os.getcwd())

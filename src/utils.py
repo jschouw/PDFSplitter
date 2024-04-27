@@ -2,25 +2,10 @@
     Functionality and logic of the program.
 """
 
-# to-do: create output.write() function that automatically encodes strings (check extract_metadata function)
-
-# [brainstorming:]
-# functionality to-do: splice, metadata operations
-# encrypt/password, reduce file size
-# Edit text and images, reorder, and delete pages in a PDF
-# Convert PDFs and export to Microsoft Word, Excel, and PowerPoint
-# Redact to permanently remove sensitive visible information
-# Compare two versions of a PDF to review all differences
-
-# ****************************************************************************
-
 import os
 import json
-from datetime import datetime
 from pypdf import PdfReader
 from pypdf import PdfWriter
-from tkinter import messagebox
-from tkinter import filedialog
 from uuid import uuid4
 import src.gui as gui
 
@@ -125,4 +110,38 @@ def extract_metadata():
                 json.dump(meta, output_file, indent=4)
 
             return gui.save_successful_dialog(os.path.basename(save_filename))
+
+
+def encrypt_pdf():
+    """ Encrypts a PDF file with a password. """
+
+    while True:  # Loop to open a file dialog
+        file = gui.encrypt_pdf_file_selection_dialog()
+
+        if not file:  # If file returns false the cancel button was pressed, so nothing and return to main menu
+            return 0
+
+        else:
+            while True:  # Start another loop, in case user leaves password field empty
+                password = gui.enter_encrypt_password_dialog()
+
+                if password:
+                    pdf_reader = PdfReader(file)
+                    pdf_writer = PdfWriter(clone_from=pdf_reader)
+
+                    pdf_writer.encrypt(password, algorithm="AES-256")
+
+                    save_file_name = f'{file} - encrypted - {uuid4()}.pdf'
+
+                    with open(save_file_name, "wb") as f:
+                        pdf_writer.write(f)
+
+                    return gui.encrypt_pdf_successful_dialog(os.path.basename(save_file_name))
+                else:
+                    return 0
+
+def decrypt_pdf():
+    """ Decrypts an encrypted PDF file with a password. """
+
+    pass
 
